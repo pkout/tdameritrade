@@ -1,3 +1,4 @@
+import json
 import os
 import time
 
@@ -21,7 +22,10 @@ class TDClient(object):
         self._accountIds = accountIds
 
     def _headers(self):
-        return {'Authorization': 'Bearer ' + self._accessToken['token']}
+        return {
+            'Authorization': 'Bearer ' + self._accessToken['token'],
+            'Content-Type': 'application/json'
+        }
 
     def _updateAccessTokenIfExpired(self):
         # Expire the token one minute before its expiration time to
@@ -194,4 +198,4 @@ class TDClient(object):
         self._updateAccessTokenIfExpired()
         return requests.post(ORDERS % account_id,
                              headers=self._headers(),
-                             params=order_dict).json()
+                             data=json.dumps(order_dict))
