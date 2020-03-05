@@ -6,8 +6,8 @@ import requests
 
 from tdameritrade import auth
 
-from .urls import (ACCOUNTS, HISTORY, INSTRUMENTS, MOVERS, OPTIONCHAIN, QUOTES,
-                   SEARCH)
+from .urls import (ACCOUNTS, HISTORY, INSTRUMENTS, MOVERS, OPTIONCHAIN, ORDERS,
+                   QUOTES, SEARCH)
 
 class TDClient(object):
 
@@ -160,3 +160,38 @@ class TDClient(object):
                             headers=self._headers(),
                             params={'direction': direction,
                                     'change_type': change_type}).json()
+
+    def place_order(self, account_id, order_dict):
+        """Places an order specified by `order_dict`.
+
+        An example of a limit order specification:
+
+            {
+                "session": "NORMAL",
+                "duration": "DAY",
+                "orderType": "LIMIT",
+                "price": 36,
+                "requestedDestination": "AUTO",
+                "orderLegCollection": [
+                    {
+                        "orderLegType": "EQUITY",
+                        "instrument": {
+                            "assetType": "EQUITY",
+                            "symbol": "SPCE"
+                        },
+                        "instruction": "BUY",
+                        "quantity": 1,
+                        "quantityType": "SHARES"
+                    }
+                ],
+                "orderStrategyType": "SINGLE"
+            }
+
+        Args:
+            account_id: Id of the account.
+            order_dict: The order specification dictionary.
+        """
+        self._updateAccessTokenIfExpired()
+        return requests.post(ORDERS % account_id,
+                             headers=self._headers(),
+                             params=order_dict).json()
