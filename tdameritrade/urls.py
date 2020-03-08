@@ -1,4 +1,3 @@
-
 BASE = 'https://api.tdameritrade.com/v1/'
 ACCOUNTS = BASE + 'accounts/'
 SEARCH = BASE + 'instruments'
@@ -8,3 +7,4 @@ HISTORY = BASE + 'marketdata/%s/pricehistory'
 OPTIONCHAIN = BASE + 'marketdata/chains'
 MOVERS = BASE + 'marketdata/%s/movers'
 ORDERS = BASE + 'accounts/%s/orders'
+ORDER_REPLACE = ORDERS + '/%s'

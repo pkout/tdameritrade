@@ -8,7 +8,7 @@ import requests
 from tdameritrade import auth
 
 from .urls import (ACCOUNTS, HISTORY, INSTRUMENTS, MOVERS, OPTIONCHAIN, ORDERS,
-                   QUOTES, SEARCH)
+                   ORDER_REPLACE, QUOTES, SEARCH)
 
 class TDClient(object):
 
@@ -198,4 +198,38 @@ class TDClient(object):
         self._updateAccessTokenIfExpired()
         return requests.post(ORDERS % account_id,
                              headers=self._headers(),
-                             data=json.dumps(order_dict))
+                             data=json.dumps(order_dict)).json()
+
+    def replace_order(self, account_id, order_id, order_dict):
+        """Replaces the order given by `order_id` with the new order.
+        The old order will be cancelled and the new order will be created.
+
+        For order specification, see the `place_order()` function docs.
+
+        Args:
+            account_id: Id of the account.
+            order_id: Id of the order to replace.
+            order_dict: The order specification dictionary.
+        """
+        self._updateAccessTokenIfExpired()
+        return requests.put(ORDER_REPLACE % (account_id, order_id),
+                            headers=self._headers(),
+                            data=json.dumps(order_dict)).json()
+
+    def get_orders(self, account_id, **kwargs):
+        """Returns the orders for the account.
+
+        For allowed arguments, see https://developer.tdameritrade.com/
+        account-access/apis/get/accounts/%7BaccountId%7D/orders-0
+
+        Args:
+            account_id: Id of the account.
+
+        Returns:
+            A list of orders for the account.
+        """
+        self._updateAccessTokenIfExpired()
+        return requests.get(ORDERS % account_id,
+                            headers=self._headers(),
+                            params={**kwargs}).json()
+
