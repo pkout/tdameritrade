@@ -198,7 +198,7 @@ class TDClient(object):
         self._updateAccessTokenIfExpired()
         return requests.post(ORDERS % account_id,
                              headers=self._headers(),
-                             data=json.dumps(order_dict)).json()
+                             data=json.dumps(order_dict))
 
     def replace_order(self, account_id, order_id, order_dict):
         """Replaces the order given by `order_id` with the new order.
@@ -214,7 +214,7 @@ class TDClient(object):
         self._updateAccessTokenIfExpired()
         return requests.put(ORDER_REPLACE % (account_id, order_id),
                             headers=self._headers(),
-                            data=json.dumps(order_dict)).json()
+                            data=json.dumps(order_dict))
 
     def get_orders(self, account_id, **kwargs):
         """Returns the orders for the account.
